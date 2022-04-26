@@ -1,0 +1,14 @@
+Dockerfile
+.*
+core
+VERSION.cache
+bin
+build.out
+doc
+goinstall.log
+last-change
+misc
+pkg
+test.out
+test
+
