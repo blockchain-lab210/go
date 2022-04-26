@@ -4,6 +4,10 @@
 
 // Package sha256 implements the SHA224 and SHA256 hash algorithms as defined
 // in FIPS 180-4.
+
+//go:build !GM
+// +build !GM
+
 package sha256
 
 import (

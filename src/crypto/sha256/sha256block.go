@@ -6,6 +6,9 @@
 // In its own file so that a faster assembly or C version
 // can be substituted easily.
 
+//go:build !GM
+// +build !GM
+
 package sha256
 
 import "math/bits"
