@@ -1,9 +1,8 @@
-// Copyright 2009 The Go Authors. All rights reserved.
+// Copyright 2022 Lab210. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Package sha256 implements the SHA224 and SHA256 hash algorithms as defined
-// in FIPS 180-4.
+// This is a wrapper that replace sha256 with GM sm3
 
 //go:build GM
 // +build GM
@@ -13,12 +12,10 @@ package sha256
 import (
 	"crypto"
 	"crypto/gm/sm3"
-	"fmt"
 	"hash"
 )
 
 func init() {
-	fmt.Println("Init GM sm3 wrapper for Go lib crypto/sha256.")
 	crypto.RegisterHash(crypto.SHA224, New224)
 	crypto.RegisterHash(crypto.SHA256, New)
 }

@@ -4,6 +4,9 @@
 
 // SHA256 hash algorithm. See FIPS 180-2.
 
+//go:build !GM
+// +build !GM
+
 package sha256
 
 import (

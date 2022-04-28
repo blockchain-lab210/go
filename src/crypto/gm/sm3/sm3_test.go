@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"testing"
 )
 
@@ -31,12 +32,14 @@ func byteToString(b []byte) string {
 	return ret
 }
 func TestSm3(t *testing.T) {
+	tmpDir := t.TempDir()
+	inputFile := filepath.Join(tmpDir, "ifile")
 	msg := []byte("test")
-	err := ioutil.WriteFile("ifile", msg, os.FileMode(0644)) // 生成测试文件
+	err := ioutil.WriteFile(inputFile, msg, os.FileMode(0644)) // 生成测试文件
 	if err != nil {
 		t.Fatal(err)
 	}
-	msg, err = ioutil.ReadFile("ifile")
+	msg, err = ioutil.ReadFile(inputFile)
 	if err != nil {
 		t.Fatal(err)
 	}

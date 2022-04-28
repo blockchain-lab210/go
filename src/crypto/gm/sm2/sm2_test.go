@@ -22,6 +22,7 @@ import (
 	"io/ioutil"
 	"math/big"
 	"os"
+	"path/filepath"
 	"testing"
 )
 
@@ -56,17 +57,23 @@ func TestSm2(t *testing.T) {
 		fmt.Printf("Error: failed to decrypt: %v\n", err)
 	}
 	fmt.Printf("clear text = %s\n", d3)
-	msg, _ = ioutil.ReadFile("ifile")             // 从文件读取数据
+	tmpDir := t.TempDir()
+	inputFile := filepath.Join(tmpDir, "ifile")
+	err = ioutil.WriteFile(inputFile, []byte("test"), os.FileMode(0644)) // 生成测试文件
+	if err != nil {
+		t.Fatal(err)
+	}
+	msg, _ = ioutil.ReadFile(inputFile)           // 从文件读取数据
 	sign, err := priv.Sign(rand.Reader, msg, nil) // 签名
 	if err != nil {
 		t.Fatal(err)
 	}
-
-	err = ioutil.WriteFile("TestResult", sign, os.FileMode(0644))
+	resultFile := filepath.Join(tmpDir, "TestResult")
+	err = ioutil.WriteFile(resultFile, sign, os.FileMode(0644))
 	if err != nil {
 		t.Fatal(err)
 	}
-	signdata, _ := ioutil.ReadFile("TestResult")
+	signdata, _ := ioutil.ReadFile(resultFile)
 	ok := priv.PublicKey.Verify(msg, signdata) // 密钥验证
 	if ok != true {
 		fmt.Printf("Verify error\n")
