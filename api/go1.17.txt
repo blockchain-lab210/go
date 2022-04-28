@@ -193,3 +193,72 @@ pkg time, method (Time) GoString() string
 pkg time, method (Time) IsDST() bool
 pkg time, method (Time) UnixMicro() int64
 pkg time, method (Time) UnixMilli() int64
+pkg crypto/gm/sm2, func BytesCombine(...[]uint8) []uint8
+pkg crypto/gm/sm2, func CipherMarshal([]uint8) ([]uint8, error)
+pkg crypto/gm/sm2, func CipherUnmarshal([]uint8) ([]uint8, error)
+pkg crypto/gm/sm2, func Decrypt(*PrivateKey, []uint8, int) ([]uint8, error)
+pkg crypto/gm/sm2, func DecryptAsn1(*PrivateKey, []uint8) ([]uint8, error)
+pkg crypto/gm/sm2, func Encrypt(*PublicKey, []uint8, io.Reader, int) ([]uint8, error)
+pkg crypto/gm/sm2, func EncryptAsn1(*PublicKey, []uint8, io.Reader) ([]uint8, error)
+pkg crypto/gm/sm2, func GenerateKey(io.Reader) (*PrivateKey, error)
+pkg crypto/gm/sm2, func KeyExchangeA(int, []uint8, []uint8, *PrivateKey, *PublicKey, *PrivateKey, *PublicKey) ([]uint8, []uint8, []uint8, error)
+pkg crypto/gm/sm2, func KeyExchangeB(int, []uint8, []uint8, *PrivateKey, *PublicKey, *PrivateKey, *PublicKey) ([]uint8, []uint8, []uint8, error)
+pkg crypto/gm/sm2, func P256Sm2() elliptic.Curve
+pkg crypto/gm/sm2, func Sm2Sign(*PrivateKey, []uint8, []uint8, io.Reader) (*big.Int, *big.Int, error)
+pkg crypto/gm/sm2, func Sm2Verify(*PublicKey, []uint8, []uint8, *big.Int, *big.Int) bool
+pkg crypto/gm/sm2, func Verify(*PublicKey, []uint8, *big.Int, *big.Int) bool
+pkg crypto/gm/sm2, func WNafReversed([]int8) []int8
+pkg crypto/gm/sm2, func ZA(*PublicKey, []uint8) ([]uint8, error)
+pkg crypto/gm/sm2, method (*PrivateKey) Decrypt(io.Reader, []uint8, crypto.DecrypterOpts) ([]uint8, error)
+pkg crypto/gm/sm2, method (*PrivateKey) DecryptAsn1([]uint8) ([]uint8, error)
+pkg crypto/gm/sm2, method (*PrivateKey) EncryptAsn1([]uint8, io.Reader) ([]uint8, error)
+pkg crypto/gm/sm2, method (*PrivateKey) Public() crypto.PublicKey
+pkg crypto/gm/sm2, method (*PrivateKey) Sign(io.Reader, []uint8, crypto.SignerOpts) ([]uint8, error)
+pkg crypto/gm/sm2, method (*PrivateKey) Sm3Digest([]uint8, []uint8) ([]uint8, error)
+pkg crypto/gm/sm2, method (*PrivateKey) Verify([]uint8, []uint8) bool
+pkg crypto/gm/sm2, method (*PublicKey) EncryptAsn1([]uint8, io.Reader) ([]uint8, error)
+pkg crypto/gm/sm2, method (*PublicKey) Sm3Digest([]uint8, []uint8) ([]uint8, error)
+pkg crypto/gm/sm2, method (*PublicKey) Verify([]uint8, []uint8) bool
+pkg crypto/gm/sm2, method (PrivateKey) Add(*big.Int, *big.Int, *big.Int, *big.Int) (*big.Int, *big.Int)
+pkg crypto/gm/sm2, method (PrivateKey) Double(*big.Int, *big.Int) (*big.Int, *big.Int)
+pkg crypto/gm/sm2, method (PrivateKey) IsOnCurve(*big.Int, *big.Int) bool
+pkg crypto/gm/sm2, method (PrivateKey) Params() *elliptic.CurveParams
+pkg crypto/gm/sm2, method (PrivateKey) ScalarBaseMult([]uint8) (*big.Int, *big.Int)
+pkg crypto/gm/sm2, method (PrivateKey) ScalarMult(*big.Int, *big.Int, []uint8) (*big.Int, *big.Int)
+pkg crypto/gm/sm2, method (PublicKey) Add(*big.Int, *big.Int, *big.Int, *big.Int) (*big.Int, *big.Int)
+pkg crypto/gm/sm2, method (PublicKey) Double(*big.Int, *big.Int) (*big.Int, *big.Int)
+pkg crypto/gm/sm2, method (PublicKey) IsOnCurve(*big.Int, *big.Int) bool
+pkg crypto/gm/sm2, method (PublicKey) Params() *elliptic.CurveParams
+pkg crypto/gm/sm2, method (PublicKey) ScalarBaseMult([]uint8) (*big.Int, *big.Int)
+pkg crypto/gm/sm2, method (PublicKey) ScalarMult(*big.Int, *big.Int, []uint8) (*big.Int, *big.Int)
+pkg crypto/gm/sm2, type PrivateKey struct
+pkg crypto/gm/sm2, type PrivateKey struct, D *big.Int
+pkg crypto/gm/sm2, type PrivateKey struct, embedded PublicKey
+pkg crypto/gm/sm2, type PublicKey struct
+pkg crypto/gm/sm2, type PublicKey struct, X *big.Int
+pkg crypto/gm/sm2, type PublicKey struct, Y *big.Int
+pkg crypto/gm/sm2, type PublicKey struct, embedded elliptic.Curve
+pkg crypto/gm/sm2, var C1C2C3 int
+pkg crypto/gm/sm2, var C1C3C2 int
+pkg crypto/gm/sm3, func New() hash.Hash
+pkg crypto/gm/sm3, func Sm3Sum([]uint8) []uint8
+pkg crypto/gm/sm3, method (*SM3) BlockSize() int
+pkg crypto/gm/sm3, method (*SM3) Reset()
+pkg crypto/gm/sm3, method (*SM3) Size() int
+pkg crypto/gm/sm3, method (*SM3) Sum([]uint8) []uint8
+pkg crypto/gm/sm3, method (*SM3) Write([]uint8) (int, error)
+pkg crypto/gm/sm3, type SM3 struct
+pkg crypto/gm/sm4, const BlockSize = 16
+pkg crypto/gm/sm4, const BlockSize ideal-int
+pkg crypto/gm/sm4, func NewCipher([]uint8) (cipher.Block, error)
+pkg crypto/gm/sm4, func SetIV([]uint8) error
+pkg crypto/gm/sm4, func Sm4CFB([]uint8, []uint8, bool) ([]uint8, error)
+pkg crypto/gm/sm4, func Sm4Cbc([]uint8, []uint8, bool) ([]uint8, error)
+pkg crypto/gm/sm4, func Sm4Ecb([]uint8, []uint8, bool) ([]uint8, error)
+pkg crypto/gm/sm4, func Sm4OFB([]uint8, []uint8, bool) ([]uint8, error)
+pkg crypto/gm/sm4, method (*Sm4Cipher) BlockSize() int
+pkg crypto/gm/sm4, method (*Sm4Cipher) Decrypt([]uint8, []uint8)
+pkg crypto/gm/sm4, method (*Sm4Cipher) Encrypt([]uint8, []uint8)
+pkg crypto/gm/sm4, type SM4Key []uint8
+pkg crypto/gm/sm4, type Sm4Cipher struct
+pkg crypto/gm/sm4, var IV []uint8
