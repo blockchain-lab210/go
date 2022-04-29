@@ -12,7 +12,7 @@ package ecdsa
 import (
 	"crypto"
 	"crypto/elliptic"
-	"crypto/gm/sm2"
+	"crypto/sm2"
 	"io"
 	"math/big"
 
@@ -21,7 +21,10 @@ import (
 )
 
 // PublicKey represents an ECDSA public key.
-type PublicKey sm2.PublicKey
+type PublicKey struct {
+	elliptic.Curve
+	X, Y *big.Int
+}
 
 // Any methods implemented on PublicKey might need to also be implemented on
 // PrivateKey, as the latter embeds the former and will expose its methods.
@@ -45,7 +48,10 @@ func (pub *PublicKey) Equal(x crypto.PublicKey) bool {
 }
 
 // PrivateKey represents an ECDSA private key.
-type PrivateKey sm2.PrivateKey
+type PrivateKey struct {
+	PublicKey
+	D *big.Int
+}
 
 // Public returns the public key corresponding to priv.
 func (priv *PrivateKey) Public() crypto.PublicKey {
@@ -86,7 +92,14 @@ func (priv *PrivateKey) Sign(rand io.Reader, digest []byte, opts crypto.SignerOp
 
 // GenerateKey generates a public and private key pair.
 func GenerateKey(c elliptic.Curve, rand io.Reader) (*PrivateKey, error) {
-	return sm2.GenerateKey(rand)
+	priv, err := sm2.GenerateKey(rand)
+	if err != nil {
+		return nil, err
+	}
+	return &PrivateKey{
+		PublicKey: PublicKey{Curve: c, X: priv.X, Y: priv.Y},
+		D:         priv.D,
+	}, nil
 }
 
 // Sign signs a hash (which should be the result of hashing a larger message)
@@ -95,7 +108,10 @@ func GenerateKey(c elliptic.Curve, rand io.Reader) (*PrivateKey, error) {
 // returns the signature as a pair of integers. The security of the private key
 // depends on the entropy of rand.
 func Sign(rand io.Reader, priv *PrivateKey, hash []byte) (r, s *big.Int, err error) {
-	return sm2.Sm2Sign(priv, hash, nil, rand)
+	return sm2.Sm2Sign(&sm2.PrivateKey{
+		PublicKey: sm2.PublicKey{Curve: priv.Curve, X: priv.X, Y: priv.Y},
+		D:         priv.D,
+	}, hash, nil, rand)
 }
 
 // SignASN1 signs a hash (which should be the result of hashing a larger message)
@@ -110,7 +126,7 @@ func SignASN1(rand io.Reader, priv *PrivateKey, hash []byte) ([]byte, error) {
 // Verify verifies the signature in r, s of hash using the public key, pub. Its
 // return value records whether the signature is valid.
 func Verify(pub *PublicKey, hash []byte, r, s *big.Int) bool {
-	return sm2.Sm2Verify(pub, hash, nil, r, s)
+	return sm2.Sm2Verify(&sm2.PublicKey{Curve: pub.Curve, X: pub.X, Y: pub.Y}, hash, nil, r, s)
 }
 
 // VerifyASN1 verifies the ASN.1 encoded signature, sig, of hash using the

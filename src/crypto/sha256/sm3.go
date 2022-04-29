@@ -11,7 +11,7 @@ package sha256
 
 import (
 	"crypto"
-	"crypto/gm/sm3"
+	"crypto/sm3"
 	"hash"
 )
 
