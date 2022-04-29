@@ -5,8 +5,8 @@
 // Package elliptic implements several standard elliptic curves over prime
 // fields.
 
-//go:build !GM
-// +build !GM
+//go:build GM
+// +build GM
 
 package elliptic
 
@@ -441,7 +441,6 @@ var p384 *CurveParams
 
 func initAll() {
 	initP224()
-	initP256()
 	initP256Sm2()
 	initP384()
 	initP521()
@@ -468,7 +467,7 @@ func initP384() {
 // ScalarMult and ScalarBaseMult are implemented using constant-time algorithms.
 func P256() Curve {
 	initonce.Do(initAll)
-	return p256
+	return sm2P256
 }
 
 func P256Sm2() Curve {
