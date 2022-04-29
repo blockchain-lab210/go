@@ -17,6 +17,7 @@ package sm2
 
 import (
 	"bytes"
+	"crypto/elliptic"
 	"crypto/rand"
 	"fmt"
 	"io/ioutil"
@@ -133,7 +134,7 @@ func TestKEB2(t *testing.T) {
 	expk := []byte{0x6C, 0x89, 0x34, 0x73, 0x54, 0xDE, 0x24, 0x84,
 		0xC6, 0x0B, 0x4A, 0xB1, 0xFD, 0xE4, 0xC6, 0xE5}
 
-	curve := P256Sm2()
+	curve := elliptic.P256Sm2()
 	curve.ScalarBaseMult(daBuf)
 	da := new(PrivateKey)
 	da.PublicKey.Curve = curve

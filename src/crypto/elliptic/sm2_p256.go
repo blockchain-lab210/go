@@ -16,7 +16,6 @@ limitations under the License.
 package elliptic
 
 import (
-	"crypto/elliptic"
 	"math/big"
 )
 
@@ -56,12 +55,8 @@ var sm2P256 sm2P256Curve
 type sm2P256FieldElement [9]uint32
 type sm2P256LargeFieldElement [17]uint64
 
-const (
-	bottom29Bits = 0x1FFFFFFF
-)
-
 func initP256Sm2() {
-	sm2P256.CurveParams = &elliptic.CurveParams{Name: "SM2-P-256"} // sm2
+	sm2P256.CurveParams = &CurveParams{Name: "SM2-P-256"} // sm2
 	A, _ := new(big.Int).SetString("FFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFC", 16)
 	//SM2椭	椭 圆 曲 线 公 钥 密 码 算 法 推 荐 曲 线 参 数
 	sm2P256.P, _ = new(big.Int).SetString("FFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFF", 16)
@@ -77,7 +72,12 @@ func initP256Sm2() {
 	sm2P256FromBig(&sm2P256.b, sm2P256.B)
 }
 
-func (curve sm2P256Curve) Params() *elliptic.CurveParams {
+// returns the parameter a
+func (curve *CurveParams) A() *big.Int {
+	return sm2P256ToBig(&sm2P256.a)
+}
+
+func (curve sm2P256Curve) Params() *CurveParams {
 	return sm2P256.CurveParams
 }
 
@@ -770,13 +770,6 @@ func sm2P256Square(b, a *sm2P256FieldElement) {
 	tmp[15] = uint64(a[7]) * (uint64(a[8]) << 1)
 	tmp[16] = uint64(a[8]) * uint64(a[8])
 	sm2P256ReduceDegree(b, &tmp)
-}
-
-// nonZeroToAllOnes returns:
-//   0xffffffff for 0 < x <= 2**31
-//   0 for x == 0 or x > 2**31.
-func nonZeroToAllOnes(x uint32) uint32 {
-	return ((x - 1) >> 31) - 1
 }
 
 var sm2P256Carry = [8 * 9]uint32{

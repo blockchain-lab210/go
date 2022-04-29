@@ -451,10 +451,11 @@ func ZA(pub *PublicKey, uid []byte) ([]byte, error) {
 	if uidLen > 0 {
 		za.Write(uid)
 	}
-	za.Write(sm2P256ToBig(&sm2P256.a).Bytes())
-	za.Write(sm2P256.B.Bytes())
-	za.Write(sm2P256.Gx.Bytes())
-	za.Write(sm2P256.Gy.Bytes())
+	curve := pub.Curve.Params()
+	za.Write(curve.A().Bytes())
+	za.Write(curve.B.Bytes())
+	za.Write(curve.Gx.Bytes())
+	za.Write(curve.Gy.Bytes())
 
 	xBuf := pub.X.Bytes()
 	yBuf := pub.Y.Bytes()
