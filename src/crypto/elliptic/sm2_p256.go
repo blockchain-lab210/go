@@ -13,12 +13,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package sm2
+package elliptic
 
 import (
 	"crypto/elliptic"
 	"math/big"
-	"sync"
 )
 
 /** 学习标准库p256的优化方法实现sm2的快速版本
@@ -48,18 +47,16 @@ import (
 
 type sm2P256Curve struct {
 	RInverse *big.Int
-	*elliptic.CurveParams
+	*CurveParams
 	a, b, gx, gy sm2P256FieldElement
 }
 
-var initonce sync.Once
 var sm2P256 sm2P256Curve
 
 type sm2P256FieldElement [9]uint32
 type sm2P256LargeFieldElement [17]uint64
 
 const (
-	bottom28Bits = 0xFFFFFFF
 	bottom29Bits = 0x1FFFFFFF
 )
 
@@ -78,11 +75,6 @@ func initP256Sm2() {
 	sm2P256FromBig(&sm2P256.gx, sm2P256.Gx)
 	sm2P256FromBig(&sm2P256.gy, sm2P256.Gy)
 	sm2P256FromBig(&sm2P256.b, sm2P256.B)
-}
-
-func P256Sm2() elliptic.Curve {
-	initonce.Do(initP256Sm2)
-	return sm2P256
 }
 
 func (curve sm2P256Curve) Params() *elliptic.CurveParams {
@@ -104,14 +96,6 @@ func (curve sm2P256Curve) IsOnCurve(X, Y *big.Int) bool {
 
 	sm2P256Square(&y2, &y) // y2 = y ^ 2
 	return sm2P256ToBig(&x3).Cmp(sm2P256ToBig(&y2)) == 0
-}
-
-func zForAffine(x, y *big.Int) *big.Int {
-	z := new(big.Int)
-	if x.Sign() != 0 || y.Sign() != 0 {
-		z.SetInt64(1)
-	}
-	return z
 }
 
 func (curve sm2P256Curve) Add(x1, y1, x2, y2 *big.Int) (*big.Int, *big.Int) {
@@ -500,10 +484,10 @@ func sm2P256PointAdd(x1, y1, z1, x2, y2, z2, x3, y3, z3 *sm2P256FieldElement) {
 // (x3, y3, z3) = (x1, y1, z1)- (x2, y2, z2)
 func sm2P256PointSub(x1, y1, z1, x2, y2, z2, x3, y3, z3 *sm2P256FieldElement) {
 	var u1, u2, z22, z12, z23, z13, s1, s2, h, h2, r, r2, tm sm2P256FieldElement
-	y:=sm2P256ToBig(y2)
-	zero:=new(big.Int).SetInt64(0)
-	y.Sub(zero,y)
-	sm2P256FromBig(y2,y)
+	y := sm2P256ToBig(y2)
+	zero := new(big.Int).SetInt64(0)
+	y.Sub(zero, y)
+	sm2P256FromBig(y2, y)
 
 	if sm2P256ToBig(z1).Sign() == 0 {
 		sm2P256Dup(x3, x2)
@@ -814,7 +798,6 @@ func sm2P256ReduceCarry(a *sm2P256FieldElement, carry uint32) {
 	a[7] += sm2P256Carry[carry*9+7]
 }
 
-
 func sm2P256ReduceDegree(a *sm2P256FieldElement, b *sm2P256LargeFieldElement) {
 	var tmp [18]uint32
 	var carry, x, xMask uint32
@@ -1064,7 +1047,7 @@ func WNafReversed(wnaf []int8) []int8 {
 	return wnafRev
 }
 func sm2GenrateWNaf(b []byte) []int8 {
-	n:= new(big.Int).SetBytes(b)
+	n := new(big.Int).SetBytes(b)
 	var k *big.Int
 	if n.Cmp(sm2P256.N) >= 0 {
 		n.Mod(n, sm2P256.N)
@@ -1113,8 +1096,8 @@ func boolToUint(b bool) uint {
 	}
 	return 0
 }
-func abs(a int8) uint32{
-	if a<0 {
+func abs(a int8) uint32 {
+	if a < 0 {
 		return uint32(-a)
 	}
 	return uint32(a)
@@ -1146,13 +1129,13 @@ func sm2P256ScalarMult(xOut, yOut, zOut, x, y *sm2P256FieldElement, scalar []int
 	}
 	nIsInfinityMask = ^uint32(0)
 	var zeroes int16
-	for i := 0; i<len(scalar); i++ {
-		if scalar[i] ==0{
+	for i := 0; i < len(scalar); i++ {
+		if scalar[i] == 0 {
 			zeroes++
 			continue
 		}
-		if(zeroes>0){
-			for  ;zeroes>0;zeroes-- {
+		if zeroes > 0 {
+			for ; zeroes > 0; zeroes-- {
 				sm2P256PointDouble(xOut, yOut, zOut, xOut, yOut, zOut)
 			}
 		}
@@ -1174,8 +1157,8 @@ func sm2P256ScalarMult(xOut, yOut, zOut, x, y *sm2P256FieldElement, scalar []int
 		sm2P256CopyConditional(zOut, &tz, mask)
 		nIsInfinityMask &^= pIsNoninfiniteMask
 	}
-	if(zeroes>0){
-		for  ;zeroes>0;zeroes-- {
+	if zeroes > 0 {
+		for ; zeroes > 0; zeroes-- {
 			sm2P256PointDouble(xOut, yOut, zOut, xOut, yOut, zOut)
 		}
 	}

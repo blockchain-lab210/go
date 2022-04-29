@@ -20,8 +20,8 @@ import (
 	"bytes"
 	"crypto"
 	"crypto/elliptic"
-	"crypto/gm/sm3"
 	"crypto/rand"
+	"crypto/sm3"
 	"encoding/asn1"
 	"encoding/binary"
 	"errors"
@@ -382,7 +382,7 @@ func Decrypt(priv *PrivateKey, data []byte, mode int) ([]byte, error) {
 // thisIsA: 如果是A调用，文档中的协商第三步，设置为true，否则设置为false
 // 返回 k 为klen长度的字节串
 func keyExchange(klen int, ida, idb []byte, pri *PrivateKey, pub *PublicKey, rpri *PrivateKey, rpub *PublicKey, thisISA bool) (k, s1, s2 []byte, err error) {
-	curve := P256Sm2()
+	curve := elliptic.P256Sm2()
 	N := curve.Params().N
 	x2hat := keXHat(rpri.PublicKey.X)
 	x2rb := new(big.Int).Mul(x2hat, rpri.D)
@@ -636,7 +636,7 @@ func randFieldElement(c elliptic.Curve, random io.Reader) (k *big.Int, err error
 }
 
 func GenerateKey(random io.Reader) (*PrivateKey, error) {
-	c := P256Sm2()
+	c := elliptic.P256Sm2()
 	if random == nil {
 		random = rand.Reader //If there is no external trusted random source,please use rand.Reader to instead of it.
 	}

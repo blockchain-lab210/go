@@ -438,6 +438,7 @@ var p384 *CurveParams
 func initAll() {
 	initP224()
 	initP256()
+	initP256Sm2()
 	initP384()
 	initP521()
 }
@@ -464,6 +465,11 @@ func initP384() {
 func P256() Curve {
 	initonce.Do(initAll)
 	return p256
+}
+
+func P256Sm2() Curve {
+	initonce.Do(initAll)
+	return sm2P256
 }
 
 // P384 returns a Curve which implements NIST P-384 (FIPS 186-3, section D.2.4),
