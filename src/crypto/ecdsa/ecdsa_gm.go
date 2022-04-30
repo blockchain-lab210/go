@@ -97,7 +97,7 @@ func GenerateKey(c elliptic.Curve, rand io.Reader) (*PrivateKey, error) {
 		return nil, err
 	}
 	return &PrivateKey{
-		PublicKey: PublicKey{Curve: c, X: priv.X, Y: priv.Y},
+		PublicKey: PublicKey{Curve: priv.Curve, X: priv.X, Y: priv.Y},
 		D:         priv.D,
 	}, nil
 }
