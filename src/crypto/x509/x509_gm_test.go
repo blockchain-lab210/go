@@ -176,7 +176,7 @@ func TestCreateSelfSignedCertificate(t *testing.T) {
 		checkSig  bool
 		sigAlgo   SignatureAlgorithm
 	}{
-		{"ECDSA/ECDSA", &ecdsaPriv.PublicKey, ecdsaPriv, true, ECDSAWithSHA1},
+		{"ECDSA/ECDSA", &ecdsaPriv.PublicKey, ecdsaPriv, true, ECDSAWithSHA256},
 	}
 
 	testExtKeyUsage := []ExtKeyUsage{ExtKeyUsageClientAuth, ExtKeyUsageServerAuth}
@@ -415,7 +415,7 @@ func TestCreateCertificateRequest(t *testing.T) {
 		priv    interface{}
 		sigAlgo SignatureAlgorithm
 	}{
-		{"ECDSA-256", ecdsa256Priv, ECDSAWithSHA1},
+		{"ECDSA-256", ecdsa256Priv, ECDSAWithSHA256},
 	}
 
 	for _, test := range tests {
@@ -679,7 +679,7 @@ func TestCreateRevocationList(t *testing.T) {
 				SubjectKeyId: []byte{1, 2, 3},
 			},
 			template: &RevocationList{
-				SignatureAlgorithm: ECDSAWithSHA512,
+				SignatureAlgorithm: ECDSAWithSHA256,
 				RevokedCertificates: []pkix.RevokedCertificate{
 					{
 						SerialNumber:   big.NewInt(2),
@@ -815,7 +815,7 @@ func TestUnknownExtKey(t *testing.T) {
 		DNSNames:     []string{"foo"},
 		ExtKeyUsage:  []ExtKeyUsage{ExtKeyUsage(-1)},
 	}
-	signer, err := rsa.GenerateKey(rand.Reader, 1024)
+	signer, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
 	if err != nil {
 		t.Errorf("failed to generate key for TestUnknownExtKey")
 	}
