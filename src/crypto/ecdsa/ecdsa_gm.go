@@ -125,8 +125,12 @@ func SignASN1(rand io.Reader, priv *PrivateKey, hash []byte) ([]byte, error) {
 
 // Verify verifies the signature in r, s of hash using the public key, pub. Its
 // return value records whether the signature is valid.
-func Verify(pub *PublicKey, hash []byte, r, s *big.Int) bool {
-	return sm2.Sm2Verify(&sm2.PublicKey{Curve: pub.Curve, X: pub.X, Y: pub.Y}, hash, nil, r, s)
+func Verify(pub *PublicKey, hash []byte, r, s *big.Int) (ok bool) {
+	sm2pub := &sm2.PublicKey{Curve: pub.Curve, X: pub.X, Y: pub.Y}
+	if ok = sm2.Sm2Verify(sm2pub, hash, nil, r, s); !ok {
+		ok = sm2.Sm2Verify(sm2pub, hash, nil, r, s.Sub(pub.Params().N, s))
+	}
+	return
 }
 
 // VerifyASN1 verifies the ASN.1 encoded signature, sig, of hash using the
