@@ -2,6 +2,9 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+//go:build !GM
+// +build !GM
+
 //go:build !amd64 && !s390x && !ppc64le && !arm64
 // +build !amd64,!s390x,!ppc64le,!arm64
 

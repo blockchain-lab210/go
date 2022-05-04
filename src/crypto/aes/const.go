@@ -2,6 +2,9 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+//go:build !GM
+// +build !GM
+
 // Package aes implements AES encryption (formerly Rijndael), as defined in
 // U.S. Federal Information Processing Standards Publication 197.
 //

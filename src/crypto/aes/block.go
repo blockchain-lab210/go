@@ -2,6 +2,9 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+//go:build !GM
+// +build !GM
+
 // This Go implementation is derived in part from the reference
 // ANSI C implementation, which carries the following notice:
 //
