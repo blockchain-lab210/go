@@ -2,10 +2,8 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-//go:build !GM
+//go:build !GM && ppc64le
 // +build !GM
-
-//go:build ppc64le
 // +build ppc64le
 
 package aes
