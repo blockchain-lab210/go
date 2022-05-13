@@ -4,9 +4,7 @@
 
 // Package x509 parses X.509-encoded keys and certificates.
 //go:build !GM
-//  +build !GM
-
-
+// +build !GM
 
 package x509
 
